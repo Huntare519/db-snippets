@@ -50,14 +50,18 @@ def update_books(collection):
 
 def main():
     parser = argparse.ArgumentParser(description='Process some arguments.')
-    parser.add_argument('--test', type=bool, help='use the test database')
+    parser.add_argument('--test', type=bool, nargs="?",
+                        help='which database to use')
     args = parser.parse_args()
-    isTest = args.test
+    if args.test is None:
+        test = "test"  # default to test database
+    else:
+        test = args.test
 
     client = get_db_client()
     ping_db(client)
 
-    db = client[isTest == True and "test" or "websitedb"]
+    db = client[test]
     collection = db["books"]
     update_books(collection)
 
